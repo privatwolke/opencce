@@ -23,6 +23,9 @@
 ## CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##
 
+from __future__ import print_function
+
+import sys
 import os.path
 import argparse
 import tempfile
@@ -358,48 +361,172 @@ class OpenCCE(object):
 	def run():
 		''' Run the command line interface. '''
 
+		# Parse the arguments and run the correct method based on the result.
 		args = OpenCCE.parse_arguments()
-		print args
+
+		args.func(args, log = Log(args.quiet))
+
+
+	@staticmethod
+	def encrypt(args, log):
+		''' Runs when the user uses the 'encrypt' positional argument. '''
+
+		container = CCEContainer()
+
+		for certificate in args.certificates:
+			log.log("Adding certificate: " + certificate)
+			try:
+				container.add_recipient_certificate(certificate)
+				log.success()
+			except IOError, error:
+				log.warn(error.message)
+
+		for path in args.files:
+			log.log("Adding file: " + path)
+			try:
+				container.add(path)
+				log.success()
+			except OSError, error:
+				log.warn(error.message)
+
+		with open(args.output, "wb") as handle:
+			log.log("Encrypting to " + args.output)
+			handle.write(container.encrypt())
+			log.success()
+
+
+	@staticmethod
+	def decrypt(args, log):
+		''' Runs when the user uses the 'dencrypt' positional argument. '''
+		log.print("This is decrypt.")
+		print(args)
 
 
 	@staticmethod
 	def parse_arguments():
 		''' Parses command line arguments and returns them. '''
 
+		# Set up the main parser.
 		parser = argparse.ArgumentParser(
 			description = "Perform cryptographic operations on CCE containers."
 		)
 
-		group = parser.add_mutually_exclusive_group(required = True)
-
-		group.add_argument(
-			"-e", "--encrypt",
-			nargs   = "*",
-			help    = "encrypt supplied files",
-			metavar = "file.ext"
-		)
-
-		group.add_argument(
-			"-d", "--decrypt",
-			help    = "decrypt from supplied container",
-			metavar = "Container.cce"
-		)
-
 		parser.add_argument(
-			"-o", "--output",
+			"-q", "--quiet",
+			action = "store_true",
+			help   = "suppress all log messages"
+		)
+
+		# All main functions have their own subparser.
+		subparsers = parser.add_subparsers()
+
+
+		# This is the 'encrypt' parser.
+		encryption_parser = subparsers.add_parser("encrypt", help = "Encrypt files in a CCE container.")
+
+		# The func parameter is later used to automatically call the correct method.
+		encryption_parser.set_defaults(func = OpenCCE.encrypt)
+
+		encryption_parser.add_argument(
+			"-O", "--output",
 			help    = "sets the filename of CCE container when encrypting",
-			default = "Container.cce",
-			metavar = "Container.cce"
+			default = "Container.cce"
 		)
 
-		parser.add_argument(
+		encryption_parser.add_argument(
+			"-C", "--compress",
+			action  = "store_true",
+			help    = "create a compressed container (this is NOT compatible with the original CCE)"
+		)
+
+		encryption_parser.add_argument(
 			"-c", "--certificates",
-			nargs   = "*",
-			help    = "one or more certificates to use for encryption or decryption",
-			metavar = "certificate"
+			nargs    = "+",
+			help     = "one or more certificate keys to use for encryption or decryption",
+			metavar  = "CERTIFICATE",
+			required = True
+		)
+
+		encryption_parser.add_argument(
+			"files",
+			help = "files that should be stored and encrypted",
+			nargs = "+",
+			metavar = "FILE"
+		)
+
+
+		# This is the 'decrypt' parser.
+		decryption_parser = subparsers.add_parser("decrypt", help = "Decrypt files from a CCE container.")
+		decryption_parser.set_defaults(func = OpenCCE.decrypt)
+
+		decryption_parser.add_argument(
+			"-d", "--directory",
+			help    = "sets the output directory for decrypted files",
+		)
+
+		decryption_parser.add_argument(
+			"-k", "--key",
+			nargs    = 1,
+			help     = "the key to be used for decryption",
+			required = True
+		)
+
+		decryption_parser.add_argument(
+			"container_file",
+			nargs    = 1,
+			help     = "container file to be decrypted",
+			metavar  = "CONTAINER"
+		)
+
+		decryption_parser.add_argument(
+			"-P", "--password",
+			help    = "password for the key file, if needed"
 		)
 
 		return parser.parse_args()
+
+
+
+class Log(object):
+	''' A simple logging class that supports partial log messages. '''
+
+	def __init__(self, quiet):
+		self.quiet = quiet
+
+
+	def print(self, message):
+		''' Prints a complete line to standard error. '''
+
+		if not self.quiet:
+			print(message, file = sys.stderr)
+
+
+	def log(self, message):
+		''' Prints an incomplete log message to standard error. '''
+
+		if not self.quiet:
+			print(message, file = sys.stderr, end = " ")
+
+
+	def success(self):
+		''' Completes an incomplete log message on standard error with [OK]. '''
+
+		if not self.quiet:
+			print("... [\033[0;32mOK\033[0m]", file = sys.stderr)
+
+
+	def error(self, message):
+		''' Completes an incomplete log message on standard error with [ERROR] (message). '''
+
+		if not self.quiet:
+			print("... [\033[0;31mERROR\033[0m] {0}".format(message), file = sys.stderr)
+
+
+	def warn(self, message):
+		''' Completes an incomplete log message on standard error with [WARNING] (message). '''
+
+		if not self.quiet:
+			print("... [\033[0;33mWARNING\033[0m] {0}".format(message), file = sys.stderr)
 
 
 
