@@ -1,0 +1,5 @@
+[FORMAT]
+indent-string = "\t"
+
+[MESSAGE CONTROL]
+disable = bad-continuation, bad-whitespace, too-few-public-methods, no-member
