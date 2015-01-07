@@ -54,7 +54,9 @@ class CCEContainerFile(object):
 	def __init__(self, handle, name, directory):
 		self.handle = handle
 		self.name = name
-		self.directory = directory
+		
+		# Prevent against relative directory changes by disallowing "../"
+		self.directory = directory.replace("../", "")
 
 
 
