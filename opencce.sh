@@ -22,6 +22,9 @@
 ##
 
 
+echo "THIS SCRIPT IS DEPRECATED. PLEASE USE opencce-cli."
+
+
 ##################
 ## DEPENDENCIES ##
 ##################
