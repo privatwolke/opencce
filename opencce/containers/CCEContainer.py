@@ -37,7 +37,7 @@ from email.mime.audio import MIMEAudio
 from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
 
-from opencce import crypto
+from opencce import x509
 from opencce.utils import Utils
 
 
@@ -51,7 +51,7 @@ class CCEContainer(set):
 	def __init__(self):
 		''' creates an empty CCEContainer '''
 
-		self.recipients = crypto.CertificateStore()
+		self.recipients = x509.CertificateStore()
 		super(CCEContainer, self).__init__()
 
 
@@ -143,8 +143,8 @@ class CCEContainer(set):
 
 		# Generate and append the certificate store.
 		part = MIMEApplication(self.recipients.get_archive().read(), "zip")
-		part.add_header("Content-Disposition", "attachment", filename = crypto.CERTIFICATE_STORE_NAME)
-		part.set_param("name", crypto.CERTIFICATE_STORE_NAME)
+		part.add_header("Content-Disposition", "attachment", filename = x509.CERTIFICATE_STORE_NAME)
+		part.set_param("name", x509.CERTIFICATE_STORE_NAME)
 		message.attach(part)
 
 		# Write the message to a memory buffer.
