@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+''' This module provides functionality related to X509 certificates. '''
+
 ##
 ## Copyright (c) 2015 Stephan Klein (@codecurry)
 ##

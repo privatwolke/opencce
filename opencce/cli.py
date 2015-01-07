@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+''' This module provides the command line interface for opencce. '''
+
 ##
 ## Copyright (c) 2015 Stephan Klein (@codecurry)
 ##
@@ -23,6 +25,7 @@
 
 from __future__ import print_function
 
+import os.path
 import argparse
 
 from opencce.utils import Log
@@ -75,9 +78,28 @@ class OpenCCE(object):
 
 	@staticmethod
 	def decrypt(args, log):
-		''' Runs when the user uses the 'dencrypt' positional argument. '''
-		log.print("This is decrypt.")
-		print(args)
+		''' Runs when the user uses the 'decrypt' positional argument. '''
+
+		log.log("Decrypting container: " + args.container_file[0])
+		with open(args.container_file[0], "r") as handle:
+			container = CCEContainer.load(handle, args.key[0], password = args.password)
+		log.success()
+
+		log.log("Making sure that the extraction directory is clean: " + args.directory)
+		counter = 0
+		while os.path.exists(args.directory):
+			args.directory += str(counter)
+			counter += 1
+
+		os.mkdir(args.directory)
+		log.success()
+
+		for directory, filename, handle in container.export():
+			path = os.path.join(args.directory, *(directory + [filename]))
+			log.log("Extracting file: " + path)
+			with open(path, "wb") as handle2:
+				handle2.write(handle.read())
+			log.success()
 
 
 	@staticmethod
@@ -140,6 +162,7 @@ class OpenCCE(object):
 		decryption_parser.add_argument(
 			"-d", "--directory",
 			help    = "sets the output directory for decrypted files",
+			default = "."
 		)
 
 		decryption_parser.add_argument(
@@ -162,12 +185,3 @@ class OpenCCE(object):
 		)
 
 		return parser.parse_args()
-
-
-
-
-
-
-
-if __name__ == "__main__":
-	OpenCCE.run()

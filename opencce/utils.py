@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-''' This module provides classes to encrypt and decrypt CCE container files. '''
+''' This module provides common classes and utilities for opencce. '''
 
 ##
 ## Copyright (c) 2015 Stephan Klein (@codecurry)
@@ -34,6 +34,7 @@ except ImportError:
 	import mimetypes
 
 
+
 class Utils(object):
 	''' Provides common utility functions. '''
 
@@ -42,11 +43,14 @@ class Utils(object):
 
 
 	@staticmethod
-	def get_mimetype(filename):
+	def get_mimetype(filename, buf = ""):
 		''' Try our best to guess the MIME type of a given file. '''
 
 		if magic:
-			mimetype = magic.from_file(filename, mime = True)
+			try:
+				mimetype = magic.from_file(filename, mime = True)
+			except IOError:
+				mimetype = magic.from_buffer(buf, mime = True)
 		else:
 			mimetype, _ = mimetypes.guess_type(filename)
 			if not mimetype:
