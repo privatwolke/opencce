@@ -54,7 +54,7 @@ class CCEContainerFile(object):
 	def __init__(self, handle, name, directory):
 		self.handle = handle
 		self.name = name
-		
+
 		# Prevent against relative directory changes by disallowing "../"
 		self.directory = directory.replace("../", "")
 
@@ -224,15 +224,15 @@ class CCEContainer(set):
 		# Try to load the key.
 		try:
 			smime.load_key(key, callback = password_callback)
-		except M2Crypto.EVP.EVPError, error:
+		except M2Crypto.EVP.EVPError as error:
 			raise IOError(error)
 
 		# Load the PKCS#7 message and try to decrypt it.
 		pkcs7, _ = M2Crypto.SMIME.smime_load_pkcs7_bio(buf)
-		
+
 		try:
 			message = smime.decrypt(pkcs7)
-		except M2Crypto.SMIME.PKCS7_Error, error:
+		except M2Crypto.SMIME.PKCS7_Error as error:
 			raise IOError(error)
 
 		instance = CCEContainer()

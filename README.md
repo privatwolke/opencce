@@ -15,14 +15,20 @@ However, as far as I can tell, `opencce` is able to decrypt containers produced 
 * [lxml](http://lxml.de)
 * [python-magic](https://github.com/ahupp/python-magic) (optional)
 
+### About python3
+The main blocker for getting python3 compatibility is `m2crypto`.
+
+### Installation
+Get the latest version with `pip install opencce`.
+
 ### Future Plans
 * Smart Card support.
 * Compressed archive variant (SMIME is horrible for space efficiency).
 * Install scripts, package for distributions.
 
 ### Usage
-#### Encryption using `opencce-cli`
-    $ ./opencce-cli encrypt -c certificate.pem another_certificate.cer -- file1.txt file.pdf
+#### Encryption using `opencce`
+    $ opencce encrypt -c certificate.pem another_certificate.cer -- file1.txt file.pdf
     Adding certificate: certificate.pem ... [OK]
     Adding certificate: another_certificate.cer ... [OK]
     Adding file: file1.txt ... [OK]
@@ -38,8 +44,8 @@ However, as far as I can tell, `opencce` is able to decrypt containers produced 
     >>> c.add_recipient_certificate("another_certificate.cer")
     >>> with open("Container.cce", "wb") as fh: fh.write(c.encrypt())
 
-#### Decryption using `opencce-cli`
-    $ ./opencce-cli decrypt -k key.pem -d Container Container.cce
+#### Decryption using `opencce`
+    $ opencce decrypt -k key.pem -d Container Container.cce
     Decrypting container: Container.cce ... [OK]
     Making sure that the extraction directory is clean: . ... [OK]
     Extracting file: Container/file1.txt ... [OK]

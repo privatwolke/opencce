@@ -1,9 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# coding: utf-8
 
 ''' This module provides functionality related to X509 certificates. '''
 
 ##
-## Copyright (c) 2015 Stephan Klein (@codecurry)
+## Copyright (c) 2015 Stephan Klein (@privatwolke)
 ##
 ## Permission is hereby granted, free of charge, to any person obtaining
 ## a copy of this software and associated documentation files (the "Software"),

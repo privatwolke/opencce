@@ -1,9 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# coding: utf-8
 
 ''' This module provides the command line interface for opencce. '''
 
 ##
-## Copyright (c) 2015 Stephan Klein (@codecurry)
+## Copyright (c) 2015 Stephan Klein (@privatwolke)
 ##
 ## Permission is hereby granted, free of charge, to any person obtaining
 ## a copy of this software and associated documentation files (the "Software"),
@@ -59,7 +60,7 @@ class OpenCCE(object):
 			try:
 				container.add_recipient_certificate(certificate)
 				log.success()
-			except IOError, error:
+			except IOError as error:
 				log.warn(error.message)
 
 		for path in args.files:
@@ -67,7 +68,7 @@ class OpenCCE(object):
 			try:
 				container.add(path)
 				log.success()
-			except OSError, error:
+			except OSError as error:
 				log.warn(error.message)
 
 		with open(args.output, "wb") as handle:
@@ -119,7 +120,6 @@ class OpenCCE(object):
 
 		# All main functions have their own subparser.
 		subparsers = parser.add_subparsers()
-
 
 		# This is the 'encrypt' parser.
 		encryption_parser = subparsers.add_parser("encrypt", help = "Encrypt files in a CCE container.")
