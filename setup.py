@@ -3,12 +3,12 @@
 
 from setuptools import setup
 
-version = '0.2'
+version = '0.2.1'
 
 setup(name = 'opencce',
 	version = version,
 	description = 'This is a free software implementation of the CCE (Citizen Card Encrypted) functionality.',
-	long_description = open('README.md', 'r').read(),
+	long_description = open('README.rst', 'r').read(),
 	keywords = 'encryption citizencard CCE',
 	classifiers = [
 		'Development Status :: 4 - Beta',
