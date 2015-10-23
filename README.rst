@@ -49,7 +49,7 @@ Usage
 Encryption using ``opencce``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: shell
 
     $ opencce encrypt -c certificate.pem another_certificate.cer – file1.txt file.pdf
     Adding certificate: certificate.pem … [OK]
@@ -61,7 +61,7 @@ Encryption using ``opencce``
 Encryption using the Library
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: python
 
     from opencce.containers.CCEContainer import CCEContainer
     c = CCEContainer() c.add("file1.txt") c.add("file.pdf")
@@ -73,7 +73,7 @@ Encryption using the Library
 Decryption using ``opencce``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: shell
 
     $ opencce decrypt -k key.pem -d Container Container.cce
     Decrypting container: Container.cce … [OK]
@@ -84,7 +84,7 @@ Decryption using ``opencce``
 Decryption using the Library
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: python
 
     from opencce.containers.CCEContainer import CCEContainer
     with open("Container.cce", "rb") as fh:
