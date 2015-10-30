@@ -2,6 +2,9 @@ This is ``opencce``, a small application that replicates part of the
 functionality provided by the `CCE (Citizen Card Encrypted)`_ software
 by `A-SIT`_
 
+.. image:: https://travis-ci.org/privatwolke/opencce.svg?branch=master
+    :target: https://travis-ci.org/privatwolke/opencce
+
 How ``opencce`` differs…
 ------------------------
 
@@ -64,7 +67,9 @@ Encryption using the Library
 .. code-block:: python
 
     from opencce.containers.CCEContainer import CCEContainer
-    c = CCEContainer() c.add("file1.txt") c.add("file.pdf")
+    c = CCEContainer()
+		c.add("file1.txt")
+		c.add("file.pdf")
     c.add_recipient_certificate("certificate.pem")
     c.add_recipient_certificate("another_certificate.cer")
     with open("Container.cce", "wb") as fh:
