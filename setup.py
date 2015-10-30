@@ -24,7 +24,7 @@ setup(name = 'opencce',
 	url = 'https://github.com/privatwolke/opencce',
 	license = 'MIT',
 	packages = ['opencce', 'opencce.containers'],
-	install_requires = ['lxml', 'M2Crypto', 'python-magic'],
+	install_requires = ['lxml', 'M2Crypto==0.22.3', 'python-magic'],
 	package_dir = {
 		'opencce': 'opencce'
 	},
