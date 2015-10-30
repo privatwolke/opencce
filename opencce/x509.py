@@ -153,9 +153,12 @@ class CertificateStore(set):
 	def load(input_stream):
 		''' Create a new instance from a file handle pointing to data created by get_archive(). '''
 
-		with ZipFile(input_stream, "r") as zipfile:
-			with zipfile.open(CERTIFICATE_STORE_NAME_INNER) as xmlfile:
-				xml = lxml.etree.parse(xmlfile)
+		zipfile = ZipFile(input_stream, "r")
+		xmlfile = zipfile.open(CERTIFICATE_STORE_NAME_INNER)
+		xml = lxml.etree.parse(xmlfile)
+
+		xmlfile.close()
+		zipfile.close()
 
 		instance = CertificateStore()
 
